@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--    使全局映射器启用或禁用缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="useGeneratedKeys" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--开启驼峰命名转换Table:create_time到 Entity(createTime)-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--    配置默认的执行器.SIMPLE就是普通的执行器;REUSE执行器会重用预处理语句（PreparedStatement）;BATCH执行器不仅重用语句还会执行批量更新-->
+        <setting name="defaultExecutorType" value="REUSE"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+    </settings>
+
+    <!-- Continue going here -->
+    <typeAliases>
+        <package name="com.amaan.domain"/>
+    </typeAliases>
+</configuration>
