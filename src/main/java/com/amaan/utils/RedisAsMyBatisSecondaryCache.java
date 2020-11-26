@@ -10,13 +10,13 @@ import org.apache.ibatis.cache.Cache;
  * springboot-mybatis-redis
  * 2020-10-27 13:52
  */
-public class RedisCache implements Cache {
+public class RedisAsMyBatisSecondaryCache implements Cache {
 
     /**
      * 放入缓存的mapper的namespace
      */
     private final String id;
-    public RedisCache(String id) {
+    public RedisAsMyBatisSecondaryCache(String id) {
         this.id = id;
     }
     @Override

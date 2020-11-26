@@ -17,10 +17,10 @@ public class UserLogProducer {
     @Autowired
     KafkaTemplate kafkaTemplate;
 
-    public void sendLog(String userid){
+    public void sendLog(String userId){
         UserLog userLog = new UserLog();
         userLog.setUsername("kafka user");
-        userLog.setUserid(userid);
+        userLog.setUserid(userId);
         userLog.setState("0");
         System.err.println("发送用户日志数据:"+userLog);
         kafkaTemplate.send("user-log", JSON.toJSONString(userLog));

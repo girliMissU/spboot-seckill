@@ -75,49 +75,54 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-    <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>1.2.73</version>
-    </dependency>
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>2.11.2</version>
-    </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.73</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.11.2</version>
+        </dependency>
 
-    <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.2.3</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-to-slf4j</artifactId>
-        <version>2.10.0</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jul-to-slf4j</artifactId>
-        <version>1.7.25</version>
-        <scope>compile</scope>
-    </dependency>
-    <!--JWT-->
-    <dependency>
-        <groupId>com.auth0</groupId>
-        <artifactId>java-jwt</artifactId>
-        <version>3.4.0</version>
-    </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-slf4j</artifactId>
+            <version>2.10.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.25</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--JWT-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.0</version>
+        </dependency>
 
-    <!--引入kafak和spring整合的jar-->
-    <dependency>
-        <groupId>org.springframework.kafka</groupId>
-        <artifactId>spring-kafka</artifactId>
-        <version>1.1.1.RELEASE</version>
-    </dependency>
-
+        <!--引入kafak和spring整合的jar-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>1.1.1.RELEASE</version>
+        </dependency>
+        <!--Google 布隆过滤器-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>29.0-jre</version>
+        </dependency>
 
     </dependencies>
 

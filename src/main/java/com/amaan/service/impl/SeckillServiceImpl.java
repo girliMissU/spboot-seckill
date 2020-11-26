@@ -11,6 +11,7 @@ import com.amaan.exception.RepeatKillException;
 import com.amaan.exception.SeckillCloseException;
 import com.amaan.exception.SeckillException;
 import com.amaan.service.SeckillService;
+import com.amaan.utils.BloomFilterHelper;
 import com.amaan.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ public class SeckillServiceImpl implements SeckillService {
      */
     private final String salt = "shsdssljdd'l.";
     private static final String PROD_PREFIX = "PROD::";
+    private static final String BLOOM_KEY = "prod";
 
     @Autowired
     private SeckillDao seckillDao;
@@ -50,6 +52,8 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private BloomFilterHelper<String> bloomFilterHelper;
 
     @Override
     public List<Seckill> getSeckillList() {
@@ -80,8 +84,42 @@ public class SeckillServiceImpl implements SeckillService {
             redisUtils.hmSet(prodKey,"id",seckillId+"");
             redisUtils.hmSet(prodKey,"name",prod.getName());
             redisUtils.hmSet(prodKey,"number",prod.getNumber()+"");
-            redisUtils.hmSet(prodKey,"start-time",dateToSTring(prod.getStartTime()));
-            redisUtils.hmSet(prodKey,"end-time",dateToSTring(prod.getEndTime()));
+            redisUtils.hmSet(prodKey,"start-time",dateToString(prod.getStartTime()));
+            redisUtils.hmSet(prodKey,"end-time",dateToString(prod.getEndTime()));
+        }
+        return prod;
+    }
+
+    public Seckill getByIdWithBloom(long seckillId){
+        String prodKey = PROD_PREFIX+ seckillId;
+        Seckill prod;
+        //查询先看布隆过滤器里有没有，有就去查缓存，没有查数据库
+        if(redisUtils.includeByBloomFilter(bloomFilterHelper,BLOOM_KEY,prodKey)) {
+            if (redisUtils.exists(prodKey)){
+                prod = new Seckill();
+                prod.setSeckillId(seckillId);
+                prod.setName((String) redisUtils.hmGet(prodKey,"name"));
+                prod.setNumber(Integer.parseInt((String) redisUtils.hmGet(prodKey,"number")));
+                try {
+                    prod.setStartTime(stirngToDate((String) redisUtils.hmGet(prodKey,"start-time")));
+                    prod.setEndTime(stirngToDate((String)redisUtils.hmGet(prodKey,"end-time")));
+                    return prod;
+                } catch (ParseException e) {
+                    logger.error("日期转换失败");
+                    e.printStackTrace();
+                    redisUtils.remove(prodKey);
+                }
+            }
+        }
+        prod = seckillDao.queryById(seckillId);
+        if (prod!=null){
+            redisUtils.hmSet(prodKey,"id",seckillId+"");
+            redisUtils.hmSet(prodKey,"name",prod.getName());
+            redisUtils.hmSet(prodKey,"number",prod.getNumber()+"");
+            redisUtils.hmSet(prodKey,"start-time",dateToString(prod.getStartTime()));
+            redisUtils.hmSet(prodKey,"end-time",dateToString(prod.getEndTime()));
+            //同时加入布隆过滤器
+            redisUtils.addByBloomFilter(bloomFilterHelper,BLOOM_KEY,prodKey);
         }
         return prod;
     }
@@ -111,7 +149,7 @@ public class SeckillServiceImpl implements SeckillService {
         return md5;
     }
 
-    private String dateToSTring(Date date){
+    private String dateToString(Date date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return formatter.format(date);
     }

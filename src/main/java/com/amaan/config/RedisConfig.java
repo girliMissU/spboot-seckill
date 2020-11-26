@@ -1,8 +1,11 @@
 package com.amaan.config;
 
+import com.amaan.utils.BloomFilterHelper;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Funnel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -66,5 +69,15 @@ public class RedisConfig extends CachingConfigurerSupport {
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         template.setValueSerializer(jackson2JsonRedisSerializer);
+    }
+
+    /**
+     * <注册BloomFilterHelper>
+     * @return
+     */
+    @Bean
+    public BloomFilterHelper<String> initBloomFilterHelper() {
+        return new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
+                .putString(from, Charsets.UTF_8), 1000000, 0.01);
     }
 }
