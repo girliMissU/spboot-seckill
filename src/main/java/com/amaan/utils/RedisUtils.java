@@ -1,5 +1,6 @@
 package com.amaan.utils;
 
+import com.amaan.config.BloomFilterHelper;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
@@ -46,7 +47,7 @@ public class RedisUtils {
         Preconditions.checkArgument(bloomFilterHelper != null, "bloomFilterHelper不能为空");
         int[] offset = bloomFilterHelper.murmurHashOffset(value);
         for (int i : offset) {
-//            System.out.println("key : " + key + " " + "value : " + i);
+            System.out.println("bloom add key : " + key + " " + "value : " + i);
             redisTemplate.opsForValue().setBit(key, i, true);
         }
     }
@@ -58,12 +59,11 @@ public class RedisUtils {
         Preconditions.checkArgument(bloomFilterHelper != null, "bloomFilterHelper不能为空");
         int[] offset = bloomFilterHelper.murmurHashOffset(value);
         for (int i : offset) {
-//            System.out.println("key : " + key + " " + "value : " + i);
+            System.out.println("bloom search key : " + key + " " + "value : " + i);
             if (!redisTemplate.opsForValue().getBit(key, i)) {
                 return false;
             }
         }
-
         return true;
     }
 

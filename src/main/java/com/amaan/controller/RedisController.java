@@ -36,7 +36,7 @@ public class RedisController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping("/adduser")
+    @RequestMapping("/addUser")
     public int addUser(@RequestParam("name")String name,@RequestParam("age")String age){
         return userService.addUser(name, age);
     }
@@ -44,10 +44,10 @@ public class RedisController {
     public User findUser(@RequestParam("id") Integer id){
         return userService.findById(id);
     }
-    @RequestMapping("/updataById")
-    public String updataById(@RequestParam("id") Integer id,@RequestParam("name") String name){
+    @RequestMapping("/updateById")
+    public String updateById(@RequestParam("id") Integer id,@RequestParam("name") String name){
         try {
-            userService.updataById(id, name);
+            userService.updateById(id, name);
         } catch (Exception e) {
             return"error";
         }

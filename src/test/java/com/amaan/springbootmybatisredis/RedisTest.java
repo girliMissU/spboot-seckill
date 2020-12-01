@@ -87,11 +87,12 @@ public class RedisTest {
     }
     @Test
     public void testGetById() {
-        System.out.println(seckillService.getById(1000));
+//        System.out.println(seckillService.getById(1000));
+        System.out.println(seckillService.getByIdWithBloom(1000));
     }
 
     @Test
     public void testUpdate() {
-        userService.updataById(2,"天刀无双");
+        userService.updateById(2,"天刀无双");
     }
 }

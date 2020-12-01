@@ -29,7 +29,7 @@ public interface SeckillService {
      * @return
      */
     Seckill getById(long seckillId);
-
+    Seckill getByIdWithBloom(long seckillId);
     /**
      * 在秒杀开启时输出秒杀接口的地址，否则输出系统时间和秒杀时间
      * @param seckillId
@@ -46,4 +46,5 @@ public interface SeckillService {
      */
     SeckillExecution executeSeckill(long seckillId, long userPhone, String md5)
             throws SeckillException, RepeatKillException, SeckillCloseException;
+
 }

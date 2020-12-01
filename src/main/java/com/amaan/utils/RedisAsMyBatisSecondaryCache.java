@@ -2,6 +2,8 @@ package com.amaan.utils;
 
 import org.apache.ibatis.cache.Cache;
 
+import java.util.concurrent.locks.ReadWriteLock;
+
 /**
  * 佛祖保佑，永无BUG
  * xml中<cache/>是启用Mybatis二级缓存，启用redis代替其本地缓存，<cache type="xxx.RedisCache"/>
@@ -47,5 +49,10 @@ public class RedisAsMyBatisSecondaryCache implements Cache {
     @Override
     public int getSize() {
         return 0;
+    }
+
+    @Override
+    public ReadWriteLock getReadWriteLock() {
+        return null;
     }
 }

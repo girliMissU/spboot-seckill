@@ -11,11 +11,11 @@ import com.amaan.domain.User;
  */
 public interface IUserService {
 
-    public User findById(Integer id);
+    User findById(Integer id);
 
-    public int addUser(String name,String age);
+    int addUser(String name, String age);
 
-    public void updataById(Integer id,String name);
+    void updateById(Integer id, String name);
 
-    public void deleteById(Integer id);
+    void deleteById(Integer id);
 }

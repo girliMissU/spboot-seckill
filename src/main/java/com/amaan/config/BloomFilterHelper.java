@@ -1,4 +1,4 @@
-package com.amaan.utils;
+package com.amaan.config;
 
 import com.google.common.base.Preconditions;
 import com.google.common.hash.Funnel;

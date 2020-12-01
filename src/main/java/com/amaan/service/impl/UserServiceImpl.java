@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * 佛祖保佑，永无BUG
- * @Cacheable将查询结果缓存到redis中，value指定使用缓存的名称，（key="#p0"）指定传入的第一个参数作为redis的key。
- * @CachePut，指定key，将更新的结果同步到redis中
- * @CacheEvict，指定key，删除缓存数据，allEntries=true,方法调用后将立即清除缓存
+ * '@Cacheable' 将查询结果缓存到redis中，value指定使用缓存的名称，（key="#p0"）指定传入的第一个参数作为redis的key。
+ * '@CachePut'，指定key，将更新的结果同步到redis中
+ * '@CacheEvict' 指定key，删除缓存数据，allEntries=true,方法调用后将立即清除缓存
  * 默认是string类型的key-value,且查询出来的string类型的value反序列化要求所有字段的toString中都有引号包起来
  * 双写数据不一致问题：先写数据库，删缓存，另外可加延时双删，失败重试
  * @author AMAAN
@@ -68,9 +68,9 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     //@CachePut(key = "#p0")
-    public void updataById(Integer id,String name){
+    public void updateById(Integer id,String name){
         //先更新数据库
-        userMapper.updataById(id,name);
+        userMapper.updateById(id,name);
         String userKey = USER_PREFIX+id;
 //        //先去缓存里找
 //        if (redisUtils.exists(userKey)){

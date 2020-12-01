@@ -1,6 +1,5 @@
 package com.amaan.config;
 
-import com.amaan.utils.BloomFilterHelper;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +74,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * <注册BloomFilterHelper>
      * @return
      */
-    @Bean
+    @Bean(name = "bloomFilterHelper")
     public BloomFilterHelper<String> initBloomFilterHelper() {
         return new BloomFilterHelper<>((Funnel<String>) (from, into) -> into.putString(from, Charsets.UTF_8)
                 .putString(from, Charsets.UTF_8), 1000000, 0.01);

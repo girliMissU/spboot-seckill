@@ -11,7 +11,7 @@ import com.amaan.exception.RepeatKillException;
 import com.amaan.exception.SeckillCloseException;
 import com.amaan.exception.SeckillException;
 import com.amaan.service.SeckillService;
-import com.amaan.utils.BloomFilterHelper;
+import com.amaan.config.BloomFilterHelper;
 import com.amaan.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +52,7 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     private RedisUtils redisUtils;
+
     @Autowired
     private BloomFilterHelper<String> bloomFilterHelper;
 
@@ -90,6 +91,7 @@ public class SeckillServiceImpl implements SeckillService {
         return prod;
     }
 
+    @Override
     public Seckill getByIdWithBloom(long seckillId){
         String prodKey = PROD_PREFIX+ seckillId;
         Seckill prod;
