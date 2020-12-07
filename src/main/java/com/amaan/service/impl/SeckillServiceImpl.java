@@ -71,8 +71,8 @@ public class SeckillServiceImpl implements SeckillService {
             prod.setName((String) redisUtils.hmGet(prodKey,"name"));
             prod.setNumber(Integer.parseInt((String) redisUtils.hmGet(prodKey,"number")));
             try {
-                prod.setStartTime(stirngToDate((String) redisUtils.hmGet(prodKey,"start-time")));
-                prod.setEndTime(stirngToDate((String)redisUtils.hmGet(prodKey,"end-time")));
+                prod.setStartTime(stringToDate((String) redisUtils.hmGet(prodKey,"start-time")));
+                prod.setEndTime(stringToDate((String)redisUtils.hmGet(prodKey,"end-time")));
                 return prod;
             } catch (ParseException e) {
                 logger.error("日期转换失败");
@@ -103,8 +103,8 @@ public class SeckillServiceImpl implements SeckillService {
                 prod.setName((String) redisUtils.hmGet(prodKey,"name"));
                 prod.setNumber(Integer.parseInt((String) redisUtils.hmGet(prodKey,"number")));
                 try {
-                    prod.setStartTime(stirngToDate((String) redisUtils.hmGet(prodKey,"start-time")));
-                    prod.setEndTime(stirngToDate((String)redisUtils.hmGet(prodKey,"end-time")));
+                    prod.setStartTime(stringToDate((String) redisUtils.hmGet(prodKey,"start-time")));
+                    prod.setEndTime(stringToDate((String)redisUtils.hmGet(prodKey,"end-time")));
                     return prod;
                 } catch (ParseException e) {
                     logger.error("日期转换失败");
@@ -155,7 +155,7 @@ public class SeckillServiceImpl implements SeckillService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return formatter.format(date);
     }
-    private Date stirngToDate(String s) throws ParseException {
+    private Date stringToDate(String s) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return formatter.parse(s);
     }

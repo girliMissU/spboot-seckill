@@ -8,6 +8,7 @@ import com.amaan.enums.SeckillStatEnum;
 import com.amaan.exception.RepeatKillException;
 import com.amaan.exception.SeckillCloseException;
 import com.amaan.service.SeckillService;
+import com.amaan.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -15,15 +16,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author amaan
  * @date 20/10/10
  */
-@Controller
-@RequestMapping("/seckill")//url:模块/资源/{}/细分
+@RestController
+@RequestMapping("/seckill")//url:模块/资源/{}/动作GET、POST、PUT、DELETE直观地表示获取、创建/更新、更新和删除
 public class SeckillController {
 
     private static final int REQUEST_SUCCESS = 0;
@@ -35,27 +38,31 @@ public class SeckillController {
 
     /**
      * 跳转至商品列表页
+     * public String list(Model model) {
+     *     list.jsp+mode=ModelAndView
+     *
+     *         List<Seckill> list=seckillService.getSeckillList();
+     *         model.addAttribute("list",list);
+     *         return "list";
+     *  }
      * @return
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-//    public String list(Model model) {
-//    list.jsp+mode=ModelAndView
-//    获取列表页
-//        List<Seckill> list=seckillService.getSeckillList();
-//        model.addAttribute("list",list);
-//        return "list";
-    @ResponseBody
+//    @ResponseBody
     public List<Seckill> list(){
         return seckillService.getSeckillList();
     }
 
     /**
      * 跳转至商品详情页
+     * 未完善，没有detail.jsp
+     * 不符合REST，弃用
      * @param seckillId
      * @param model
      * @return
      */
-    @RequestMapping(value = "/{seckillId}/detail",method = RequestMethod.GET)
+    @Deprecated
+//    @RequestMapping(value = "/{seckillId}/detail",method = RequestMethod.GET)
     public String detail(@PathVariable("seckillId") Long seckillId, Model model) {
         if (seckillId == null) {
             return "redirect:/seckill/list";
@@ -68,13 +75,25 @@ public class SeckillController {
         model.addAttribute("seckill",seckill);
         return "detail";
     }
+    @GetMapping(value = "/detail")
+//    @RequestBody
+    public String detail(@RequestParam("seckillId") Long seckillId){
+        Seckill seckill=seckillService.getById(seckillId);
+        if (seckill==null){
+            return JsonUtil.getJSONString(-1,"prod not found");
+        }else{
+            Map<String,Object> res = new HashMap<>();
+            res.put(String.valueOf(seckillId),seckill);
+            return JsonUtil.getJSONString(0,res);
+        }
+    }
 
     /**
      * ajax ,json暴露秒杀接口的方法
      * result的true/false代表请求是否成功，秒杀接口是否暴露的信息是在exposer里
      */
     @RequestMapping(value = "/{seckillId}/exposer", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
-    @ResponseBody
+//    @ResponseBody
     public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Long seckillId) {
         SeckillResult<Exposer> result;
         try{
@@ -89,7 +108,7 @@ public class SeckillController {
     }
 
     @RequestMapping(value = "/{seckillId}/{md5}/execution", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
-    @ResponseBody
+//    @ResponseBody
     public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,
                                                    @PathVariable("md5") String md5,
 //                                                   @CookieValue(value = "userPhone",required = false) Long userPhone)
@@ -116,7 +135,7 @@ public class SeckillController {
 
     //获取系统时间
     @RequestMapping(value = "/time/now",method = RequestMethod.GET)
-    @ResponseBody
+//    @ResponseBody
     public SeckillResult<Long> time() {
         Date now=new Date();
         return new SeckillResult<>(REQUEST_SUCCESS, "系统时间", now.getTime());

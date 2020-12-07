@@ -1,5 +1,8 @@
 package com.amaan.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -9,11 +12,15 @@ import java.io.Serializable;
  * springboot-mybatis-redis
  * 2020-09-24 21:48
  */
+@ApiModel("用户实体类")
 public class User implements Serializable {
 
 //    private static final long serialVersionUID = 1L;
+    @ApiModelProperty("用户唯一标识")
     Integer id;
+    @ApiModelProperty("用户名")
     String name;
+    @ApiModelProperty("年龄")
     String age;
 
     public Integer getId() {
