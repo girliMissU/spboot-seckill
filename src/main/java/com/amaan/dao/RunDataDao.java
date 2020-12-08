@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
  * springboot-mybatis-redis
  * 2020-11-30 19:09
  */
-@Mapper
+//@Mapper
 public interface RunDataDao {
     @Insert("insert into run_data(rotate,current,garage_id,month) values(${rotate},${current},${garageId},${month})")
     void addData(RunData data);

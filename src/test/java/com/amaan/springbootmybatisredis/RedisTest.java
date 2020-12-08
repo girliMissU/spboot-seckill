@@ -83,7 +83,7 @@ public class RedisTest {
 
     @Test
     public void testFindById() {
-        System.out.println(userService.findById(2));
+        System.out.println(userService.findById(1));
     }
     @Test
     public void testGetById() {

@@ -17,11 +17,11 @@ public class User implements Serializable {
 
 //    private static final long serialVersionUID = 1L;
     @ApiModelProperty("用户唯一标识")
-    Integer id;
+    private Integer id;
     @ApiModelProperty("用户名")
-    String name;
+    private String name;
     @ApiModelProperty("年龄")
-    String age;
+    private String age;
 
     public Integer getId() {
         return id;

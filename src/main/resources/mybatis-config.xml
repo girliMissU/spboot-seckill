@@ -20,7 +20,7 @@
     <typeAliases>
         <package name="com.amaan.domain"/>
     </typeAliases>
-<!--    <mappers>-->
-<!--        <package name="com.amaan.dao"/>-->
-<!--    </mappers>-->
+    <mappers>
+        <package name="com.amaan.dao"/>
+    </mappers>
 </configuration>

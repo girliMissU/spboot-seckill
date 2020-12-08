@@ -42,7 +42,7 @@ public class SeckillServiceImpl implements SeckillService {
      */
     private final String salt = "shsdssljdd'l.";
     private static final String PROD_PREFIX = "PROD::";
-    private static final String BLOOM_KEY = "prod";
+    private static final String BLOOM_KEY = "bloom::prod";
 
     @Autowired
     private SeckillDao seckillDao;

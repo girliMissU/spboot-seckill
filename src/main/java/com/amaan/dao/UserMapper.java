@@ -9,12 +9,12 @@ import java.util.List;
 
 /**
  * 佛祖保佑，永无BUG
- * 用@Mapper就不需要主类@MapperScan()
+ * 用@Mapper和@MapperScan()不要同时用
  * @author AMAAN
  * springboot-mybatis-redis
  * 2020-09-24 21:47
  */
-@Mapper
+//@Mapper
 public interface UserMapper {
 
     @Insert("insert into user(name,age) values(#{name},#{age})")

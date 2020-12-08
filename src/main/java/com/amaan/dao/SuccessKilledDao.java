@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author amaan
  * @date 20/10/20
  */
-@Repository
+//@Repository
 public interface SuccessKilledDao {
 
     /**

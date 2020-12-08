@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         return new JsonResult("500", "空指针异常了");
     }
 
-    @ExceptionHandler(NullPointerException.class)
+    @ExceptionHandler(SeckillException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult handleSeckillException(SeckillException ex) {
         return new JsonResult("500", ex.getMessage());

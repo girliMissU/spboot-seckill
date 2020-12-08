@@ -13,7 +13,7 @@ import java.util.List;
  * @author amaan
  * @date 20/10/20
  */
-@Repository
+//@Repository
 public interface SeckillDao {
 
     /**
