@@ -1,12 +1,14 @@
 package com.amaan.controller;
 
+import com.amaan.dao.BlogDao;
+import com.amaan.domain.Blog;
 import com.amaan.domain.User;
+import com.amaan.service.IBlogRankService;
 import com.amaan.service.IUserService;
 import com.amaan.utils.RedisUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +23,16 @@ import java.util.List;
  * springboot-mybatis-redis
  * 2020-09-24 21:21
  */
-@RestController
+@RestController("/redis")
 public class RedisController {
 
     @Autowired
     private RedisUtils redisUtils;
+
+    @Autowired
+    private IBlogRankService blogService;
+    @Autowired
+    private BlogDao blogDao;
 
     @RequestMapping("setAndGet")
     public String test(String k, String v){
@@ -109,5 +116,33 @@ public class RedisController {
     public void logout(HttpServletRequest request){
         //redis会自动注销
         request.getSession().invalidate();
+    }
+
+    /**
+     * 加入待入选的博客到排行榜
+     */
+    @PostMapping("/addToRank")
+    public void addToRank(@RequestParam("blogID") Integer blogID,
+                           @RequestParam(value = "score",required = false) Integer score){
+        if (score==null){
+            score = 1;
+        }
+        blogService.insertBlogRank(blogID,score);
+    }
+    @PostMapping("/updateRank")
+    public void updateRank(@RequestParam("blogID") Integer blogID,
+                           @RequestParam(value = "increment") Integer increment){
+        blogService.updateRank(blogID,increment);
+    }
+    /**
+     * 获取排行榜前N
+     */
+    @GetMapping("/getRank")
+    public List<Blog> getRank(@RequestParam(value = "rankBound",required = false) Integer rankBound){
+        if(rankBound==null||rankBound<=0){
+            //默认十条
+            rankBound = 10;
+        }
+        return blogService.getRankByBound(rankBound);
     }
 }

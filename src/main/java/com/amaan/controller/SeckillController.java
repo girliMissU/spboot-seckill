@@ -1,5 +1,6 @@
 package com.amaan.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.amaan.domain.Seckill;
 import com.amaan.dto.Exposer;
 import com.amaan.dto.SeckillExecution;
@@ -9,14 +10,18 @@ import com.amaan.exception.RepeatKillException;
 import com.amaan.exception.SeckillCloseException;
 import com.amaan.service.SeckillService;
 import com.amaan.utils.JsonUtil;
+import com.amaan.utils.RedisUtils;
+import com.amaan.utils.ReqDedupHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -33,6 +38,11 @@ public class SeckillController {
 
     @Autowired
     private SeckillService seckillService;
+
+    @Autowired
+    private RedisUtils redisUtils;
+    @Autowired
+    private ReqDedupHelper requestDedup;
 
     /**
      * 跳转至商品列表页
@@ -110,11 +120,19 @@ public class SeckillController {
     public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,
                                                    @PathVariable("md5") String md5,
 //                                                   @CookieValue(value = "userPhone",required = false) Long userPhone)
-                                                   @RequestParam("userPhone") Long userPhone) {
+                                                   @RequestParam("userPhone") Long userPhone,
+                                                               HttpServletRequest request) {
         if (userPhone==null) {
             return new SeckillResult<>(REQUEST_FAILED,"未注册","用户未注册");
         }
-
+        /*在controller判断会产生大量重复代码,可以用AOP*/
+        String KEY = request.getSession().getAttribute("username") + "-" + "seckill" + "-"
+                + requestDedup.dedupParamMD5("{\"seckillId\":"+seckillId+"}","requestTime");
+        long expireTime = 1000;
+        String val = "expireAt@" + System.currentTimeMillis() + expireTime;
+        if (redisUtils.setNXWithExpire(KEY, val ,expireTime, TimeUnit.MILLISECONDS)){
+            return new SeckillResult<>(REQUEST_FAILED,"请勿在1秒内重复请求！","重复请求");
+        }
         try {
             SeckillExecution execution = seckillService.executeSeckill(seckillId, userPhone, md5);
             return new SeckillResult<>(REQUEST_SUCCESS, "进行秒杀！", execution);

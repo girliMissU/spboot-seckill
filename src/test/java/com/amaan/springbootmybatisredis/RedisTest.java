@@ -3,11 +3,13 @@ package com.amaan.springbootmybatisredis;
 import com.amaan.SpringbootMybatisRedisApplication;
 import com.amaan.domain.User;
 import com.amaan.dao.UserMapper;
+import com.amaan.service.IBlogRankService;
 import com.amaan.service.IUserService;
 import com.amaan.service.SeckillService;
 import com.amaan.utils.RedisUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.models.auth.In;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +42,8 @@ public class RedisTest {
     private RedisTemplate<String,String> redisTemplate;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private IBlogRankService blogRankService;
 
     @Test
     public void testMybatis(){
@@ -94,5 +99,14 @@ public class RedisTest {
     @Test
     public void testUpdate() {
         userService.updateById(2,"天刀无双");
+    }
+
+    @Test
+    public void testBlogRank(){
+//        blogRankService.insertBlogRank(6,4);
+        blogRankService.updateRank(7,7);
+        for (Object o : blogRankService.getRankByBound(10)) {
+            System.out.println(o);
+        }
     }
 }

@@ -35,6 +35,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             return false;
         }
         logger.info("session interceptor =====> 用户"+object.toString()+"已登录");
+        //重复请求可以在这里处理，但不是所有方法都要防止重复请求，会增加CPU资源消耗，根据URI区分，请求参数不好搞
         return true;
     }
 

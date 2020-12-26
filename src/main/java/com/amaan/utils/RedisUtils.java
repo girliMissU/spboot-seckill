@@ -1,12 +1,17 @@
 package com.amaan.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.amaan.config.BloomFilterHelper;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +73,16 @@ public class RedisUtils {
     }
 
     /**
-     * 写入缓存 * *
+     * set if not exist with expire
+     * 原子性
+     */
+    public boolean setNXWithExpire(String key, String value, long timeout, TimeUnit timeUnit){
+        BoundValueOperations ops = redisTemplate.boundValueOps(key);
+        return ops.setIfAbsent(value,timeout,timeUnit);
+    }
+
+    /**
+     * 写入缓存
      * @param key *
      * @param offset 位 8Bit=1Byte *
      * @return
@@ -134,7 +148,7 @@ public class RedisUtils {
 
     /**
      * 写入缓存设置时效时间
-     *
+     * 非原子性
      * @param key
      * @param value
      * @return
@@ -153,14 +167,14 @@ public class RedisUtils {
     }
 
     /**
-     * 批量删除对应的value * * @param keys
+     * 批量删除对应的key
+     * @param keys
      */
     public void remove(final String... keys) {
         for (String key : keys) {
             remove(key);
         }
     }
-
     /**
      * 删除对应的value * * @param key
      */
@@ -244,53 +258,79 @@ public class RedisUtils {
     }
 
     /**
-     * 有序集合添加 * * @param key * @param value * @param scoure
+     * 有序集合添加
      */
-    public void zAdd(String key, Object value, double scoure) {
+    public void zAdd(String key, Object value, double score) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        zset.add(key, value, scoure);
+        zset.add(key, value, score);
     }
 
     /**
-     * 有序集合获取 * * @param key * @param scoure * @param scoure1 * @return
+     * 获取排行范围内的对象
      */
-    public Set<Object> rangeByScore(String key, double scoure, double scoure1) {
-        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        redisTemplate.opsForValue();
-        return zset.rangeByScore(key, scoure, scoure1);
+    public List<Object> reverseRangeByLex(String key, int min, int max){
+        List<Object> objects = (List<Object>) redisTemplate.execute((RedisCallback<List<Object>>) redisConnection -> {
+            Set<byte[]> bytes1 = redisConnection.zRevRange(key.getBytes(), min, max);
+            List<Object> os = new ArrayList<>();
+            if (bytes1.size() == 0) {
+                return os;
+            }
+            for (byte[] bytes : bytes1) {
+//                    System.out.println(Arrays.toString(bytes));
+                String s = new String(bytes);
+                Object o = JSON.parse(s);
+//                System.out.println(o);
+                os.add(o);
+            }
+            return os;
+        });
+        return objects;
     }
 
     /**
-     * 有序集合获取排名 * * @param key 集合名称 * @param value 值
+     * 有序集合获取分数在范围内的对象
      */
-    public Long zRank(String key, Object value) {
+    public Set<Object> rangeByScore(String key, double score, double score1) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+//        redisTemplate.opsForValue();
+        return zset.rangeByScore(key, score, score1);
+    }
+
+    /**
+     * 有序集合获取排名
+     * @param key 集合名称
+     * @param o 要获取排名的对象
+     */
+    public Long zRank(String key, Object o) {
         ZSetOperations zset = redisTemplate.opsForZSet();
-        return zset.rank(key, value);
+        return zset.rank(key, o);
     }
 
     /**
-     * 有序集合获取排名 * * @param key
+     * 根据分数
+     * 有序集合获取排名
+     * 结果还带有分数
      */
-    public Set<ZSetOperations.TypedTuple<Object>> zRankWithScore(String key, long start, long end) {
+    public Set<ZSetOperations.TypedTuple<Object>> zRangeWithScore(String key, long start, long end) {
         ZSetOperations zset = redisTemplate.opsForZSet();
         Set<ZSetOperations.TypedTuple<Object>> ret = zset.rangeWithScores(key, start, end);
         return ret;
     }
 
     /**
-     * 有序集合添加 * * @param key * @param value
+     * zset 获取分数
      */
-    public Double zSetScore(String key, Object value) {
+    public Double zSetScore(String key, Object o) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        return zset.score(key, value);
+        return zset.score(key, o);
     }
 
     /**
-     * 有序集合添加分数 * * @param key * @param value * @param scoure
+     * 有序集合加分
      */
-    public void incrementScore(String key, Object value, double scoure) {
+    public void incrementScore(String key, Object o, double delta) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
-        zset.incrementScore(key, value, scoure);
+        zset.incrementScore(key, o, delta);
     }
 
     /**
