@@ -12,4 +12,36 @@
         </foreach>
     </select>
 
+    <update id="updateBlogRank" parameterType="java.util.List">
+        <if test="rank!=null and rank.size() > 0">
+            update blog_rank set
+             blog_id = CASE id
+             <foreach collection="rank" item="item">
+                 when #{item.id}
+                 then #{item.blogID}
+             </foreach>
+            end
+            ,
+            `key` = CASE id
+            <foreach collection="rank" item="item">
+                when #{item.id}
+                then #{item.key}
+            </foreach>
+            end
+            ,
+            score = CASE id
+            <foreach collection="rank" item="item">
+                when #{item.id}
+                then #{item.score}
+            </foreach>
+            end
+        </if>
+        where id in
+        <if test="rank != null and rank.size() > 0 ">
+            <foreach collection="rank" item="item" separator="," open="(" close=")">
+                #{item.id}
+            </foreach>
+        </if>
+    </update>
+
 </mapper>

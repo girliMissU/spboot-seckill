@@ -24,7 +24,7 @@ public class BlogRank {
     /**
      * 分数
      */
-    Integer score;
+    Double score;
 
     public Integer getId() {
         return id;
@@ -50,11 +50,11 @@ public class BlogRank {
         this.key = key;
     }
 
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 

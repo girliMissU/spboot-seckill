@@ -1,6 +1,8 @@
 package com.amaan.springbootmybatisredis;
 
 import com.amaan.SpringbootMybatisRedisApplication;
+import com.amaan.dao.BlogDao;
+import com.amaan.domain.BlogRank;
 import com.amaan.domain.User;
 import com.amaan.dao.UserMapper;
 import com.amaan.service.IBlogRankService;
@@ -44,6 +46,8 @@ public class RedisTest {
     private RedisUtils redisUtils;
     @Autowired
     private IBlogRankService blogRankService;
+    @Autowired
+    private BlogDao blogDao;
 
     @Test
     public void testMybatis(){
@@ -104,9 +108,14 @@ public class RedisTest {
     @Test
     public void testBlogRank(){
 //        blogRankService.insertBlogRank(6,4);
-        blogRankService.updateRank(7,7);
-        for (Object o : blogRankService.getRankByBound(10)) {
-            System.out.println(o);
+//        blogRankService.updateRank(7,7);
+//        for (Object o : blogRankService.getRankByBound(10)) {
+//            System.out.println(o);
+//        }
+        List<BlogRank> ranks = redisUtils.reverseRangeByLexWithScores("BLOG_RANK::0", 0, 10);
+        for (BlogRank rank : ranks) {
+            System.out.println((rank.toString()));
         }
+        blogDao.updateBlogRank(ranks);
     }
 }

@@ -2,11 +2,14 @@ package com.amaan.service.impl;
 
 import com.amaan.dao.BlogDao;
 import com.amaan.domain.Blog;
+import com.amaan.domain.BlogRank;
 import com.amaan.service.IBlogRankService;
 import com.amaan.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.List;
  * 2020-12-26 19:42
  */
 @Service
+@EnableScheduling
 public class BlogServiceImpl implements IBlogRankService {
 
     @Autowired
@@ -69,5 +73,20 @@ public class BlogServiceImpl implements IBlogRankService {
         }else{
             redisUtils.zAdd(BLOG_RANK_KEY,blogID,delta);
         }
+    }
+
+    /**
+     * 异步将排行榜写入数据库，十分钟一次
+     * 0 0 0 * * ? * 秒 分 时 日 月 年 星期
+     * 0 0/1 * * * ? * 每分钟一次
+     */
+    @Scheduled(cron = "0 0/10 * * * ? *")
+    public void persistRank(){
+//        redisUtils.incrementScore(BLOG_RANK_KEY,18,2);
+        List<BlogRank> ranks = redisUtils.reverseRangeByLexWithScores(BLOG_RANK_KEY, 0, 10);
+        for (BlogRank rank : ranks) {
+            logger.info(rank.toString());
+        }
+        blogDao.updateBlogRank(ranks);
     }
 }

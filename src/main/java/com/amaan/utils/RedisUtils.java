@@ -2,10 +2,12 @@ package com.amaan.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.amaan.config.BloomFilterHelper;
+import com.amaan.domain.BlogRank;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisZSetCommands;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
@@ -285,6 +287,27 @@ public class RedisUtils {
             return os;
         });
         return objects;
+    }
+    public List<BlogRank> reverseRangeByLexWithScores(String key, int min, int max){
+        List<BlogRank> ranks = (List<BlogRank>) redisTemplate.execute((RedisCallback<List<BlogRank>>) redisConnection -> {
+            Set<RedisZSetCommands.Tuple> tuples = redisConnection.zRevRangeWithScores(key.getBytes(), min, max);
+            List<BlogRank> os = new ArrayList<>();
+            if (tuples.size() == 0) {
+                return os;
+            }
+            int rankID=0;
+            for (RedisZSetCommands.Tuple tuple : tuples) {
+                BlogRank blogRank = new BlogRank();
+                blogRank.setId(++rankID);
+                blogRank.setKey(key);
+                blogRank.setBlogID(Integer.parseInt(new String(tuple.getValue())));
+                blogRank.setScore(tuple.getScore());
+//                System.out.println(o);
+                os.add(blogRank);
+            }
+            return os;
+        });
+        return ranks;
     }
 
     /**

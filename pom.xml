@@ -11,7 +11,7 @@
     <groupId>com.amaan</groupId>
     <artifactId>springboot-mybatis-redis</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kafka_demo</name>
+    <name>project for internship</name>
     <description>Demo project for Spring Boot and redis</description>
     <packaging>jar</packaging>
     <properties>
