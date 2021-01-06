@@ -22,7 +22,7 @@ public class MyServletRequestListener implements ServletRequestListener {
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {
         HttpServletRequest request = (HttpServletRequest) sre.getServletRequest();
-        logger.info("session id为：{}", request.getRequestedSessionId());
+//        logger.info("session id为：{}", request.getRequestedSessionId());
         logger.info("request url为：{}", request.getRequestURL());
     }
 
@@ -30,6 +30,6 @@ public class MyServletRequestListener implements ServletRequestListener {
     public void requestInitialized(ServletRequestEvent sre) {
         logger.info("request end");
         HttpServletRequest request = (HttpServletRequest) sre.getServletRequest();
-        logger.info("request域中保存的username值为：{}", request.getAttribute("username"));
+        logger.info("request域中保存的username值为：{}", request.getSession().getAttribute("username"));
     }
 }

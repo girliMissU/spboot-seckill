@@ -1,11 +1,8 @@
 package com.amaan.kafka.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.amaan.kafka.producer.UserLogProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -33,7 +30,7 @@ public class UserLogConsumer {
 
     /**
      * 订阅发布模式（一对多）也有两种，一是消费者主动去拉（轮询），而是队列主动去推
-     * Kafka是前者，消费者会去轮询队列，类似select/poll模型？？？
+     * Kafka是前者，消费者会去poll轮询队列，类似select/poll模型？？？
      * 当轮循到topic有消息，会自动调用该函数
      * @param consumerRecord 已被处理过的，包装有消息的记录
      */

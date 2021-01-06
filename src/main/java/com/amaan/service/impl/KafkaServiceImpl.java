@@ -1,6 +1,5 @@
 package com.amaan.service.impl;
 
-import com.amaan.kafka.consumer.UserLogConsumer;
 import com.amaan.service.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;

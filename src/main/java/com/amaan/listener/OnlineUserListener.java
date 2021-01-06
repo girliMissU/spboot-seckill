@@ -28,6 +28,7 @@ public class OnlineUserListener implements HttpSessionListener {
 
     /**
      * 拦截器后面运行一次，当这个请求被重定向了，重定向之后的请求不会在运行了，一个session也就是一个客户端只有一次
+     * 被拦截器放过的也不会在这运行
      * @param se
      */
     @Override

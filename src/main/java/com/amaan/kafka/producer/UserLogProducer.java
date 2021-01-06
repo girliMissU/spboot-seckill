@@ -48,6 +48,7 @@ public class UserLogProducer {
             @Override
             public void onFailure(Throwable throwable) {
                 LOGGER.info("发送异常："+throwable);
+                //显示立即关闭producer
             }
         });
     }

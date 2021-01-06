@@ -24,7 +24,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 //        logger.info("========interceptor===============");
 //        logger.info(request.getRequestURI());
         //首页路径以及登录放行，此处搞不好就会死循环重定向崩掉
-        if ("/index".equals(request.getRequestURI())||"/login.html".equals(request.getRequestURI())){
+        if ("/index".equals(request.getRequestURI())||"/login.html".equals(request.getRequestURI())||"/login".equals(request.getRequestURI())){
 //            logger.warn("放行");
             return true;
         }

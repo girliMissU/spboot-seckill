@@ -29,4 +29,6 @@ public interface IBlogRankService {
     List<Blog> getBlog(List<Integer> blogIDs);
 
     void updateRank(Integer blogID, Integer delta);
+
+    void persistRank();
 }

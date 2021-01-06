@@ -8,6 +8,7 @@ import com.amaan.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -79,8 +80,11 @@ public class BlogServiceImpl implements IBlogRankService {
      * 异步将排行榜写入数据库，十分钟一次
      * 0 0 0 * * ? * 秒 分 时 日 月 年 星期
      * 0 0/1 * * * ? * 每分钟一次
+     * spring只支持6个字段，不支持年
      */
-    @Scheduled(cron = "0 0/10 * * * ? *")
+    @Override
+    @Scheduled(cron = "0 0/10 * * * *")
+    @Async
     public void persistRank(){
 //        redisUtils.incrementScore(BLOG_RANK_KEY,18,2);
         List<BlogRank> ranks = redisUtils.reverseRangeByLexWithScores(BLOG_RANK_KEY, 0, 10);
