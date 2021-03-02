@@ -47,6 +47,18 @@ public class JsonResult<T> {
         this.msg = msg;
     }
 
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString() {
         return "JsonResult{" +
