@@ -14,6 +14,8 @@ import java.util.TreeMap;
  * 佛祖保佑，永无BUG
  * 处理重复请求,同一用户不同请求参数不算重复，但类似请求时间等也算重复
  * 根据请求参数生成唯一ID，存入Redis并设置存活时间
+ * 请求每次来都计算然后去redis中看有没有，有的话就不再执行
+ * 接口幂等性的一种考虑
  * @author AMAAN
  * springboot-mybatis-redis
  * 2020-12-26 13:25
@@ -29,7 +31,7 @@ public class ReqDedupHelper {
      * @param excludeKeys 请求参数里面要去除哪些字段再求摘要
      * @return 去除参数的MD5摘要
      */
-    public String dedupParamMD5(final String reqJSON, String... excludeKeys){
+    public static String dedupParamMD5(final String reqJSON, String... excludeKeys){
         String decreptParam = reqJSON;
         TreeMap paramMap = JSON.parseObject(decreptParam,TreeMap.class);
         if (paramMap!=null){
